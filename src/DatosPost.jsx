@@ -6,7 +6,7 @@ function FileUploader() {
   const [ruc , setRuc] = useState('');
   const handleFileChange = (e) => {
     setFile(e.target.files[0]);
-
+    Alert("Archivo subido");
   };
   const handleChange = (e) => {
     setRuc(e.target.value);
