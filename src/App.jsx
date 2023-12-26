@@ -30,7 +30,7 @@ function App() {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:5000/validar-comprobante"
+          "https://nodejs-gvel.onrender.com/validar-comprobante"
         );
         const getdata = response.data;
         console.log(getdata);

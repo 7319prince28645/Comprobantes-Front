@@ -18,7 +18,7 @@ function FileUploader() {
     formData.append('ruc', ruc);
 
     try {
-      const response = await axios.post('http://localhost:5000/recibir-datos', formData, {
+      const response = await axios.post('https://nodejs-gvel.onrender.com/recibir-datos', formData, {
         headers: {  
           'Content-Type': 'multipart/form-data',
         },
