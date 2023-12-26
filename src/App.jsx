@@ -67,7 +67,7 @@ function App() {
               <p>
                 Numero: <b>{value.numero}</b>
               </p>
-              <p>{value.monto}</p>
+           
               <b className={colores(value.data.estadoCp)}>
                 {estado(value.data.estadoCp)}
               </b>
