@@ -11,7 +11,7 @@ function FileUploader({ setLoading, fetchData, loading }) {
     Swal.fire({
       title: "¡Archivo Seleccionado!",
       text: "¡Haz clic en el botón Subir Archivo!",
-      icon: "success",
+      icon: "Success",
     });
   };
   const handleChange = (e) => {
