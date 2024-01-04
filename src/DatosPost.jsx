@@ -6,6 +6,7 @@ function FileUploader({ setLoading, fetchData, loading }) {
   const [file, setFile] = useState("");
   const [ruc, setRuc] = useState("");
   const handleFileChange = (e) => {
+    e.preventDefault();
     setFile(e.target.files[0]);
     Swal.fire({
       title: "¡Archivo Seleccionado!",

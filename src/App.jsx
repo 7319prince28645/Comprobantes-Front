@@ -1,4 +1,4 @@
-import "./App.css";
+ import "./App.css";
 import axios from "axios";
 import FileUploader from "./DatosPost";
 import { useState, useEffect } from "react";
