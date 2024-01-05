@@ -11,7 +11,7 @@ function FileUploader({ setLoading, fetchData, loading }) {
     Swal.fire({
       title: "¡Archivo Seleccionado!",
       text: "¡Haz clic en el botón Subir Archivo!",
-      icon: "Success",
+      icon: "success",
     });
   };
   const handleChange = (e) => {
@@ -20,6 +20,11 @@ function FileUploader({ setLoading, fetchData, loading }) {
   };
 
   const handleFileUpload = async () => {
+    Swal.fire({
+      title: "¡Success!",
+      text: "¡Espere por favor!",
+      icon: "success",
+    });
     const formData = new FormData();
     formData.append("file", file);
     formData.append("ruc", ruc);

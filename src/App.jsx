@@ -8,9 +8,10 @@ function App() {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);	
+  const [filter, setFilter] = useState(null);
   const estado = (value) => {
     const validarEstado = {
-      0: "Rechazado",
+      0: "No existe",
       1: "Aceptado",
       2: "Anulado",
       3: "Autorizado",
@@ -18,6 +19,8 @@ function App() {
     };
     return validarEstado[value];
   };
+  
+    
   const colores = (value) => {
     const validarEstado = {
       0: "bg-red-500 px-4 py-2",
@@ -59,8 +62,17 @@ function App() {
       // Considera establecer un estado de error aquí para mostrar en la UI
     }
   };
+ 
+  const handleFilter =  (e) => {
+    const selectedValue = e.target.value;
+    console.log(selectedValue);
+    const filteredData =  selectedValue === "todos" ? data : data.filter(value => value.data.estadoCp === selectedValue);
+    console.log(filteredData);
+    setFilter(filteredData);
+  };
 
   console.log(data);
+  console.log(filter);
   return (
     <>
       <div className="px-8 flex flex-col py-4">
@@ -71,6 +83,17 @@ function App() {
           loading={loading}
           fetchData={fetchData}
         />
+        { data && data.length > 0 &&
+        <div className="flex gap-4 pt-4" >
+                <p>Filtrar: </p>
+              <select id="filtros" onChange={handleFilter} >
+                <option value="todos">Todos</option>
+                <option value="0">No existe</option>
+                <option value="1">Aceptado</option>
+                <option value="2">Anulado</option>
+                <option value="3">Autorizado</option>
+                <option value="4">No autorizado</option>
+              </select></div>}
       </div>
       <hr />
       <div className="px-8 py-5">
@@ -83,6 +106,7 @@ function App() {
           data &&
           data.length > 0 && (
             <table className=" w-full text-center divide-y divide-gray-200 border">
+              
               <thead className="border">
                 <tr className="">
                   <th
@@ -130,7 +154,7 @@ function App() {
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
-                {data.map((value, index) => (
+                { (filter !== null? filter : data).map((value, index)   => (
                   <tr key={index} className="">
                     <td className="px-6 py-4 whitespace-nowrap">{index + 2}</td>
                     <td className="px-6 py-4 whitespace-nowrap">
