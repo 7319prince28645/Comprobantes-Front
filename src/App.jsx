@@ -1,14 +1,18 @@
- import "./App.css";
+import "./App.css";
 import axios from "axios";
 import FileUploader from "./DatosPost";
 import { useState, useEffect } from "react";
 import Instruccion from "./Instruction/Instruccion";
 import { SpinnerComponent } from "./Skeleton";
+import ExportarExcel from "./Exportar/ExportarExcel";
+import Princhard from "./Imgs/princhard.jpg";
+import { ExportarPdf } from "./Exportar/ExportarPdf";
 function App() {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);	
+  const [error, setError] = useState(null);
   const [filter, setFilter] = useState(null);
+  const [getRuc, setGetRuc] = useState("");
   const estado = (value) => {
     const validarEstado = {
       0: "No existe",
@@ -19,8 +23,7 @@ function App() {
     };
     return validarEstado[value];
   };
-  
-    
+
   const colores = (value) => {
     const validarEstado = {
       0: "bg-red-500 px-4 py-2",
@@ -40,7 +43,6 @@ function App() {
       const response = await axios.get(
         "https://nodejs-gvel.onrender.com/validar-comprobante"
       );
-      
 
       const getdata = response.data;
       console.log(getdata);
@@ -56,17 +58,22 @@ function App() {
     } catch (error) {
       if (error.response) {
         console.log(error.response.data.message);
-        setError("Error al obtener datos, por favor intentelo de nuevo recargando la pagina");
+        setError(
+          "Error al obtener datos, por favor intentelo de nuevo recargando la pagina"
+        );
       }
       console.error("Error al obtener datos:", error);
       // Considera establecer un estado de error aquí para mostrar en la UI
     }
   };
- 
-  const handleFilter =  (e) => {
+
+  const handleFilter = (e) => {
     const selectedValue = e.target.value;
     console.log(selectedValue);
-    const filteredData =  selectedValue === "todos" ? data : data.filter(value => value.data.estadoCp === selectedValue);
+    const filteredData =
+      selectedValue === "todos"
+        ? data
+        : data.filter((value) => value.data.estadoCp === selectedValue);
     console.log(filteredData);
     setFilter(filteredData);
   };
@@ -76,37 +83,44 @@ function App() {
   return (
     <>
       <div className="px-8 flex flex-col py-4">
-        <p className="absolute right-8 font-bold">PRINCHARD</p>
-        <h1 className="font-bold text-lg text-center">VALIDACION DE COMPROBANTES</h1>
+        <img src={Princhard} alt="" className="absolute right-5 w-[60px] z-10 rounded-full"/>
+        <h1 className="font-bold text-lg text-center">
+          VALIDACION DE COMPROBANTES
+        </h1>
         <FileUploader
           setLoading={setLoading}
           loading={loading}
           fetchData={fetchData}
+          setGetRuc={setGetRuc}
         />
-        { data && data.length > 0 &&
-        <div className="flex gap-4 pt-4" >
-                <p>Filtrar: </p>
-              <select id="filtros" onChange={handleFilter} >
-                <option value="todos">Todos</option>
+        {data && data.length > 0 && (
+          <div className="flex justify-between items-center">
+            <div className="flex gap-4 pt-4 items-center">
+              <p className="">Filtrar: </p>
+              <select id="filtros" onChange={handleFilter} className="px-2 py-2 cursor-pointer border text-center">
+                <option value="todos" >Todos</option>
                 <option value="0">No existe</option>
                 <option value="1">Aceptado</option>
                 <option value="2">Anulado</option>
                 <option value="3">Autorizado</option>
                 <option value="4">No autorizado</option>
-              </select></div>}
+              </select>
+            </div>
+            <div className="flex gap-4">
+            <ExportarPdf filterGa={filter} getRuc={getRuc} data={data}/>
+            <ExportarExcel filterGa={filter} getRuc={getRuc} data={data}/></div>
+          </div>
+        )}
       </div>
       <hr />
       <div className="px-8 py-5">
-        {data.length === 0 && loading === false && (
-          <Instruccion/>
-        )}
-        {loading  ? (
-          <SpinnerComponent/> 
+        {data.length === 0 && loading === false && <Instruccion />}
+        {loading ? (
+          <SpinnerComponent />
         ) : (
           data &&
           data.length > 0 && (
             <table className=" w-full text-center divide-y divide-gray-200 border">
-              
               <thead className="border">
                 <tr className="">
                   <th
@@ -154,7 +168,7 @@ function App() {
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
-                { (filter !== null? filter : data).map((value, index)   => (
+                {(filter !== null ? filter : data).map((value, index) => (
                   <tr key={index} className="">
                     <td className="px-6 py-4 whitespace-nowrap">{index + 2}</td>
                     <td className="px-6 py-4 whitespace-nowrap">
@@ -182,9 +196,7 @@ function App() {
           )
         )}
         {error && (
-          <div className="bg-red-500 text-white p-3 rounded-md">
-            {error}
-          </div>
+          <div className="bg-red-500 text-white p-3 rounded-md">{error}</div>
         )}
       </div>
     </>

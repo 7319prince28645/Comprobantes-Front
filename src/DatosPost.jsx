@@ -2,7 +2,7 @@ import { useState } from "react";
 import axios from "axios";
 import Swal from 'sweetalert2';
 
-function FileUploader({ setLoading, fetchData, loading }) {
+function FileUploader({ setLoading, fetchData, loading, setGetRuc }) {
   const [file, setFile] = useState("");
   const [ruc, setRuc] = useState("");
   const handleFileChange = (e) => {
@@ -16,7 +16,7 @@ function FileUploader({ setLoading, fetchData, loading }) {
   };
   const handleChange = (e) => {
     setRuc(e.target.value);
-   
+    setGetRuc(e.target.value);
   };
 
   const handleFileUpload = async () => {
@@ -61,7 +61,7 @@ function FileUploader({ setLoading, fetchData, loading }) {
       <input id="File" type="file" onChange={handleFileChange} className="hidden"/>
       <button
         onClick={handleFileUpload}
-        className="bg-green-500 text-white px-4 py-2"
+        className="bg-green-500 px-4 py-2"
       >
         Subir Archivo
       </button>

@@ -11,7 +11,7 @@ function Instruccion() {
   return (
     <div className="relative">
       <span className="flex justify-center items-center gap-2 font-extrabold">
-        <p className="absolute left-0 text-red-500">SOLO HASTA 4460 COMPROBANTES</p>
+        <p className="absolute left-0 text-red-500">SOLO HASTA 4000 COMPROBANTES</p>
         <GoAlert className="text-3xl" />
         <p className="text-2xl font-inter">IMPORTANTE</p>
       </span>
