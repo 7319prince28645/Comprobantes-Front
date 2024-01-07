@@ -1,8 +1,11 @@
 import { useState } from "react";
 import axios from "axios";
 import Swal from 'sweetalert2';
+import { useContext } from "react";
+import { ApiContext } from "../Service/GetApi";
 
-function FileUploader({ setLoading, fetchData, loading, setGetRuc }) {
+function FileUploader() {
+  const { setLoading, fetchData, loading } = useContext(ApiContext);
   const [file, setFile] = useState("");
   const [ruc, setRuc] = useState("");
   const handleFileChange = (e) => {
@@ -16,7 +19,6 @@ function FileUploader({ setLoading, fetchData, loading, setGetRuc }) {
   };
   const handleChange = (e) => {
     setRuc(e.target.value);
-    setGetRuc(e.target.value);
   };
 
   const handleFileUpload = async () => {
@@ -30,6 +32,7 @@ function FileUploader({ setLoading, fetchData, loading, setGetRuc }) {
     formData.append("ruc", ruc);
    
     try {
+      setLoading(!loading);
       const response = await axios.post(
         'https://nodejs-gvel.onrender.com/recibir-datos',
         formData,
@@ -41,7 +44,7 @@ function FileUploader({ setLoading, fetchData, loading, setGetRuc }) {
       );
 
       console.log("Respuesta del servidor:", response.data);
-      setLoading(!loading);
+      
       fetchData();
      
     } catch (error) {
