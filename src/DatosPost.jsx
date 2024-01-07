@@ -43,11 +43,12 @@ function FileUploader({ setLoading, fetchData, loading, setGetRuc }) {
       console.log("Respuesta del servidor:", response.data);
       setLoading(!loading);
       fetchData();
+     
     } catch (error) {
       console.error("Error al cargar el archivo:", error);
     }
   };
-
+  
   return (
     <div className="flex items-center gap-4">
       <input

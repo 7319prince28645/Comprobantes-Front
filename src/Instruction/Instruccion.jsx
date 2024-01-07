@@ -9,7 +9,7 @@ import ExcellModificado from "../Imgs/ExcellModificado.png";
 import tipodeComprobante from '../Imgs/tiposdefactura.png'
 function Instruccion() {
   return (
-    <div className="relative">
+    <div className="relative mt-5">
       <span className="flex justify-center items-center gap-2 font-extrabold">
         <p className="absolute left-0 text-red-500">SOLO HASTA 4000 COMPROBANTES</p>
         <GoAlert className="text-3xl" />

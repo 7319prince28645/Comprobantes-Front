@@ -7,12 +7,16 @@ import { SpinnerComponent } from "./Skeleton";
 import ExportarExcel from "./Exportar/ExportarExcel";
 import Princhard from "./Imgs/princhard.jpg";
 import { ExportarPdf } from "./Exportar/ExportarPdf";
+import { TiposCP } from "./CasosManual/TiposCP";
 function App() {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [filter, setFilter] = useState(null);
+  const [filterDatos, setFilter] = useState(null);
   const [getRuc, setGetRuc] = useState("");
+  const [datosRuc, setDatosRuc] = useState([]);
+  const [estadoFiltro, setEstadoFiltro] = useState("todos");
+const [tipoFiltro, setTipoFiltro] = useState("todos");
   const estado = (value) => {
     const validarEstado = {
       0: "No existe",
@@ -45,7 +49,7 @@ function App() {
       );
 
       const getdata = response.data;
-      console.log(getdata);
+      setDatosRuc(getdata.datosDelRuc);
       setData(
         getdata.resultadoValidacion.map((value, index) => {
           return {
@@ -66,21 +70,32 @@ function App() {
       // Considera establecer un estado de error aquí para mostrar en la UI
     }
   };
-
-  const handleFilter = (e) => {
-    const selectedValue = e.target.value;
-    console.log(selectedValue);
-    const filteredData =
-      selectedValue === "todos"
-        ? data
-        : data.filter((value) => value.data.estadoCp === selectedValue);
-    console.log(filteredData);
+  const handleEstadoFilter = (e) => {
+    const selectedEstado = e.target.value;
+    setEstadoFiltro(selectedEstado);
+    applyFilters(selectedEstado, tipoFiltro);
+  };
+  
+  const handleTipoFilter = (e) => {
+    const selectedTipo = e.target.value;
+    setTipoFiltro(selectedTipo);
+    applyFilters(estadoFiltro, selectedTipo);
+  };
+  
+  const applyFilters = (estado, tipo) => {
+    const filteredData = data.filter((value) => {
+      const estadoMatch = estado === "todos" || value.data.estadoCp === estado;
+      const tipoMatch = tipo === "todos" || value.codComp === tipo;
+      return estadoMatch && tipoMatch;
+    });
     setFilter(filteredData);
   };
-
-  console.log(data);
-  console.log(filter);
-  return (
+  
+  useEffect(() => {
+    // Aplicar ambos filtros cuando se cargan los datos por primera vez
+    applyFilters(estadoFiltro, tipoFiltro);
+  }, [data]);
+  return (  
     <>
       <div className="px-8 flex flex-col py-4">
         <img src={Princhard} alt="" className="absolute right-5 w-[60px] z-10 rounded-full"/>
@@ -97,7 +112,7 @@ function App() {
           <div className="flex justify-between items-center">
             <div className="flex gap-4 pt-4 items-center">
               <p className="">Filtrar: </p>
-              <select id="filtros" onChange={handleFilter} className="px-2 py-2 cursor-pointer border text-center">
+              <select id="filtros" onChange={handleEstadoFilter} className="px-2 py-2 cursor-pointer border text-center">
                 <option value="todos" >Todos</option>
                 <option value="0">No existe</option>
                 <option value="1">Aceptado</option>
@@ -105,15 +120,28 @@ function App() {
                 <option value="3">Autorizado</option>
                 <option value="4">No autorizado</option>
               </select>
+              <p>Filtrar por Comprobante:</p>
+              <select id="filtrosComprobante" onChange={handleTipoFilter} className="px-2 py-2 cursor-pointer border text-center">
+                <option value="todos">Todos</option>
+                <option value="01">Factura</option>
+                <option value="03">Boleta</option>
+                <option value="04">Liquidacion de compra</option>
+                <option value="07">Nota de Credito</option>
+                <option value="08">Nota de Debito</option>
+                <option value="R1">Recibo por honorarios</option>
+                <option value="R7">Nota de credito de recibos</option>
+              </select>
             </div>
+           
             <div className="flex gap-4">
-            <ExportarPdf filterGa={filter} getRuc={getRuc} data={data}/>
-            <ExportarExcel filterGa={filter} getRuc={getRuc} data={data}/></div>
+            <ExportarPdf filterGa={filterDatos} getRuc={getRuc} data={data} datosRuc={datosRuc.razonSocial}/>
+            <ExportarExcel filterGa={filterDatos} getRuc={getRuc} data={data} datosRuc={datosRuc.razonSocial}/></div>
           </div>
         )}
       </div>
       <hr />
-      <div className="px-8 py-5">
+      {data && data.length > 0 && <p className="font-bold font-inter text-xl text-center py-1"> {datosRuc.razonSocial}</p>}
+      <div className="px-8">
         {data.length === 0 && loading === false && <Instruccion />}
         {loading ? (
           <SpinnerComponent />
@@ -168,11 +196,11 @@ function App() {
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
-                {(filter !== null ? filter : data).map((value, index) => (
+                {(filterDatos !== null ? filterDatos : data).map((value, index) => (
                   <tr key={index} className="">
                     <td className="px-6 py-4 whitespace-nowrap">{index + 2}</td>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      {value.codComp}
+                      {TiposCP(value.codComp)}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       {value.numeroSerie}
