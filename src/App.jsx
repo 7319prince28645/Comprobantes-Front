@@ -7,15 +7,10 @@ import { ApiContext } from "./Service/GetApi";
 function App() {
   const {
     data,
-    setData,
     fetchData,
     loading,
     setLoading,
-    error,
-    setError,
-    datosRuc,
-    filterDatos,
-    setFilter,
+  
   } = useContext(ApiContext);
   return (
     <>

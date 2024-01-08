@@ -28,7 +28,7 @@ export default function ExportarExcel({ filterGa, getRuc, data, datosRuc }) {
     "Serie del Comprobante": item.numeroSerie,
     "Numero del Comprobante": item.numero,
     "Fecha de Emision": item.fechaEmision,
-    Monto: item.monto,
+    Monto: parseInt(item.monto),
     Estado: estado(item.data.estadoCp),
   }));
 
