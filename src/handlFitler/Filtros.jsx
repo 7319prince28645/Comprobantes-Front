@@ -4,15 +4,23 @@ export default function Filtros() {
   const { data, setFilter } = useContext(ApiContext);
   const [estadoFiltro, setEstadoFiltro] = useState("todos");
   const [tipoFiltro, setTipoFiltro] = useState("todos");
+  const [fechaFiltro, setFechaFiltro] = useState(""); // Add fechaFiltro state
 
   const filteredData = useMemo(() => {
     return data.filter((value) => {
       const estadoMatch =
         estadoFiltro === "todos" || value.data.estadoCp === estadoFiltro;
       const tipoMatch = tipoFiltro === "todos" || value.codComp === tipoFiltro;
+      console.log(data);
+      if (fechaFiltro !== "") {
+        const fechaFiltroFormatted = fechaFiltro.split('/').reverse().join('-');
+        const fechaValueFormatted = value.fechaEmision.split('/').reverse().join('-');
+        return estadoMatch && tipoMatch && fechaValueFormatted === fechaFiltroFormatted;
+      }
+
       return estadoMatch && tipoMatch;
     });
-  }, [data, estadoFiltro, tipoFiltro]);
+  }, [data, estadoFiltro, tipoFiltro, fechaFiltro]);
 
   useEffect(() => {
     setFilter(filteredData);
@@ -25,7 +33,11 @@ export default function Filtros() {
   const handleTipoFilter = (e) => {
     setTipoFiltro(e.target.value);
   };
-  
+
+  const handleFechaFilter = (e) => {
+    setFechaFiltro(e.target.value);
+  }; // Add handleFechaFilter
+
   return (
     <>
       <p className="">Filtrar por Estado: </p>
@@ -56,6 +68,12 @@ export default function Filtros() {
         <option value="R1">Recibo por honorarios</option>
         <option value="R7">Nota de credito de recibos</option>
       </select>
+      <p>Filtrar por Fecha:</p> {/* Add filter by fecha */}
+      <input
+        type="date"
+        onChange={handleFechaFilter}
+        className="px-2 py-2 cursor-pointer border text-center"
+      />
     </>
   );
 }
