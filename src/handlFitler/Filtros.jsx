@@ -28,7 +28,7 @@ export default function Filtros() {
   
   return (
     <>
-      <p className="">Filtrar: </p>
+      <p className="">Filtrar por Estado: </p>
       <select
         id="filtros"
         onChange={handleEstadoFilter}
